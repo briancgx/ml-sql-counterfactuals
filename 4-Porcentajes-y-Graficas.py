@@ -54,35 +54,27 @@ def evaluar_modelo(modelo, X_test, y_test):
     plt.show()
 
 def igualar_filas_dataframe_aleatoriamente(ruta_df_grande, ruta_df_pequeno):
-    # Cargar ambos DataFrames
     df_grande = pd.read_csv(ruta_df_grande)
     df_pequeno = pd.read_csv(ruta_df_pequeno)
- # Cargar ambos DataFrames
     df_grande = pd.read_csv(ruta_df_grande)
     df_pequeno = pd.read_csv(ruta_df_pequeno)
 
-    # Determinar si el DataFrame grande necesita ser reducido
+ 
     if len(df_grande) > len(df_pequeno):
-        # Reducir el DataFrame grande para que tenga el mismo número de filas que el pequeño
         df_grande_reducido = df_grande.sample(n=len(df_pequeno), random_state=42)
-        # Guardar el DataFrame reducido a un nuevo archivo CSV
-        # Asegúrate de cambiar la ruta o el nombre del archivo según necesites
         ruta_nueva_csv = ruta_df_grande.replace('.csv', 'Igualado.csv')
         df_grande_reducido.to_csv(ruta_nueva_csv, index=False)
         print(f"Archivo reducido guardado en: {ruta_nueva_csv}")
         return ruta_nueva_csv
     else:
-        # Si el DataFrame grande ya tiene el mismo número de filas o menos, no hacer nada
         print("No se necesitan ajustes, el archivo grande no tiene más filas que el pequeño.")
         return ruta_df_grande
 
 
  
-# Asumiendo que los datos están en 'datos_malignos.csv' y 'datos_benignos.csv'
+
 ruta_malignos = 'MalignosMultiplicados.csv'
 ruta_benignos = 'BenignosMultiplicados.csv'
-# Igualar el número de filas
-# Ejemplo de uso
 
 
 datos = cargar_y_preparar_datos(ruta_malignos, ruta_benignos)
@@ -93,17 +85,14 @@ evaluar_modelo(modelo, X_test, y_test)
 
 #-------------------------------------------------------
 
-# Ejemplo de una nueva sentencia
 nueva_sentencia = [0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  # Asegúrate de que tenga la misma longitud que las características del modelo
 
-# Convertir en DataFrame de Pandas para una única observación
 nueva_sentencia_df = pd.DataFrame([nueva_sentencia])
 
 def predecir_nueva_sentencia(modelo, nueva_sentencia_df):
     pred = modelo.predict(nueva_sentencia_df)
     return pred
 
-# Llamando a la función de predicción
 prediccion = predecir_nueva_sentencia(modelo, nueva_sentencia_df)
 
 if prediccion == 1:
@@ -134,15 +123,10 @@ def contar_cambios_prediccion_global(X, modelo):
     # Predicciones originales para todo el conjunto de datos
     predicciones_originales = modelo.predict(X)
     
-    # Iterar sobre cada característica
     for j in range(num_caracteristicas):
-        # Copiar el DataFrame para no modificar el original
         X_modificado = X.copy()
-        # Cambiar la característica j-ésima de todas las muestras
         X_modificado.iloc[:, j] = 1 - X_modificado.iloc[:, j]
-        # Evaluar predicción con la característica modificada para todo el conjunto
         predicciones_modificadas = modelo.predict(X_modificado)
-        # Contar cuántas veces la predicción cambia para esta característica
         cambios = np.sum(predicciones_modificadas != predicciones_originales)
         cambios_por_caracteristica[j] = cambios
     
@@ -161,7 +145,6 @@ def contar_cambios_prediccion_2_caracteristicas_optimizado(X, modelo):
             cambios = np.sum(predicciones_modificadas != modelo.predict(X))
             cambios_resultantes.append([j, k, cambios])
 
-    # Convertir resultados a DataFrame
     df_cambios = pd.DataFrame(cambios_resultantes, columns=['Característica 1', 'Característica 2', 'Cambios'])
 
     return df_cambios
@@ -171,32 +154,26 @@ def guardar_cambios_en_csv(cambios_resultantes, nombre_archivo="cambios_predicci
     df_cambios.to_csv(nombre_archivo, index=False)
     
 def graficar_caracteristicas_importantes(cambios_globales):
-    # Ordenar los cambios por importancia y obtener los 10 más altos
+
     indices_importantes = np.argsort(cambios_globales)[::-1][:10]
     cambios_importantes = cambios_globales[indices_importantes]
-    
-    # Calcular el total de cambios para todos los cambios globales
+
     total_cambios = np.sum(cambios_globales)
-    
-    # Calcular el porcentaje de cada cambio importante del total de todos los cambios
+
     porcentajes_cambios = (cambios_importantes / total_cambios) * 100
     
-    # Crear las etiquetas para las barras
     etiquetas = [f"Característica {i+1}" for i in indices_importantes]
-    
-    # Crear la gráfica de barras
+  
     plt.figure(figsize=(10, 6))
     barras = plt.bar(etiquetas, porcentajes_cambios, color='skyblue')
-    
-    # Configurar título y etiquetas con tamaño de fuente más pequeño
+
     plt.title('Top 10 Características que más cambian la predicción (%)', fontsize=10)
     plt.xlabel('Características', fontsize=7)
     plt.ylabel('Porcentaje del cambio total', fontsize=9)
     
-    # Ajustar las etiquetas del eje X
+
     plt.xticks(fontsize=8)
-    
-    # Colocar un texto sobre cada barra con el porcentaje
+
     for barra in barras:
         altura = barra.get_height()
         plt.text(barra.get_x() + barra.get_width() / 2., altura + 0.5,
@@ -262,7 +239,6 @@ def evaluar_modelo(modelo, X_test, y_test):
     plt.show()
 
 
-# Asumiendo que los datos están en 'datos_malignos.csv' y 'datos_benignos.csv'
 ruta_malignos = 'MalignosMultiplicados.csv'
 ruta_benignos = 'BenignosMultiplicados.csv'
 
@@ -275,7 +251,7 @@ evaluar_modelo(modelo, X_test, y_test)
 
 #-------------------------------------------------------
 
-# Ejemplo de una nueva sentencia
+
 nueva_sentencia = [0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  # Asegúrate de que tenga la misma longitud que las características del modelo
 
 # Convertir en DataFrame de Pandas para una única observación
@@ -285,7 +261,7 @@ def predecir_nueva_sentencia(modelo, nueva_sentencia_df):
     pred = modelo.predict(nueva_sentencia_df)
     return pred
 
-# Llamando a la función de predicción
+
 prediccion = predecir_nueva_sentencia(modelo, nueva_sentencia_df)
 
 if prediccion == 1:
@@ -313,18 +289,14 @@ def contar_cambios_prediccion_global(X, modelo):
     num_caracteristicas = X.shape[1]
     cambios_por_caracteristica = np.zeros(num_caracteristicas)
     
-    # Predicciones originales para todo el conjunto de datos
+
     predicciones_originales = modelo.predict(X)
     
-    # Iterar sobre cada característica
+
     for j in range(num_caracteristicas):
-        # Copiar el DataFrame para no modificar el original
         X_modificado = X.copy()
-        # Cambiar la característica j-ésima de todas las muestras
         X_modificado.iloc[:, j] = 1 - X_modificado.iloc[:, j]
-        # Evaluar predicción con la característica modificada para todo el conjunto
         predicciones_modificadas = modelo.predict(X_modificado)
-        # Contar cuántas veces la predicción cambia para esta característica
         cambios = np.sum(predicciones_modificadas != predicciones_originales)
         cambios_por_caracteristica[j] = cambios
     
@@ -343,7 +315,6 @@ def contar_cambios_prediccion_2_caracteristicas_optimizado(X, modelo):
             cambios = np.sum(predicciones_modificadas != modelo.predict(X))
             cambios_resultantes.append([j, k, cambios])
 
-    # Convertir resultados a DataFrame
     df_cambios = pd.DataFrame(cambios_resultantes, columns=['Característica 1', 'Característica 2', 'Cambios'])
 
     return df_cambios
@@ -353,38 +324,23 @@ def guardar_cambios_en_csv(cambios_resultantes, nombre_archivo="cambios_predicci
     df_cambios.to_csv(nombre_archivo, index=False)
     
 def graficar_caracteristicas_importantes(cambios_globales):
-    # Ordenar los cambios por importancia y obtener los 10 más altos
     indices_importantes = np.argsort(cambios_globales)[::-1][:10]
     cambios_importantes = cambios_globales[indices_importantes]
-    
-    # Calcular el total de cambios para todos los cambios globales
     total_cambios = np.sum(cambios_globales)
-    
-    # Calcular el porcentaje de cada cambio importante del total de todos los cambios
     porcentajes_cambios = (cambios_importantes / total_cambios) * 100
-    
-    # Crear las etiquetas para las barras
     etiquetas = [f"Característica {i+1}" for i in indices_importantes]
-    
-    # Crear la gráfica de barras
     plt.figure(figsize=(10, 6))
     barras = plt.bar(etiquetas, porcentajes_cambios, color='skyblue')
-    
-    # Configurar título y etiquetas con tamaño de fuente más pequeño
     plt.title('Top 10 Características que más cambian la predicción (%)', fontsize=10)
     plt.xlabel('Características', fontsize=7)
     plt.ylabel('Porcentaje del cambio total', fontsize=9)
-    
-    # Ajustar las etiquetas del eje X
     plt.xticks(fontsize=8)
     
-    # Colocar un texto sobre cada barra con el porcentaje
     for barra in barras:
         altura = barra.get_height()
         plt.text(barra.get_x() + barra.get_width() / 2., altura + 0.5,
                  f'{altura:.2f}%', ha='center', va='bottom', fontsize=8)
 
-    # Mostrar la gráfica
     plt.tight_layout()
     plt.show()
     
@@ -410,38 +366,36 @@ def contar_cambios_prediccion_por_pares_de_caracteristicas(X, modelo):
     contador_cambios = 0
 
     predicciones_originales = modelo.predict(X)
-    X_np = X.values  # Conversión para mejorar el rendimiento
+    X_np = X.values 
 
     for i in range(num_muestras):
-        cambio_detectado = False  # Bandera para detectar el primer cambio
+        cambio_detectado = False 
         for j in range(num_caracteristicas - 1):
             if cambio_detectado:
-                break  # Si ya se encontró un cambio, continuar con la siguiente muestra
+                break  
             for k in range(j + 1, num_caracteristicas):
-                # Solo proceder si aún no se ha detectado un cambio para esta muestra
                 if not cambio_detectado:
                     fila_modificada = X_np[i, :].copy()
-                    # Invertir los valores de las características j y k
+
                     fila_modificada[[j, k]] = 1 - fila_modificada[[j, k]]
 
                     prediccion_modificada = modelo.predict(fila_modificada.reshape(1, -1))
                     if prediccion_modificada != predicciones_originales[i]:
                         contador_cambios += 1
-                        cambio_detectado = True  # Marcar que se detectó un cambio y no revisar más pares para esta muestra
-                        break  # Salir del bucle interno y no evaluar más pares para esta muestra
+                        cambio_detectado = True  
+                        break
 
     return contador_cambios
-# Asumiendo que ya has cargado tus datos y entrenado tu modelo como anteriormente.
 datos = cargar_y_preparar_datos(ruta_malignos, ruta_benignos)
 X_train, X_test, y_train, y_test = dividir_datos(datos)
 modelo = entrenar_modelo(X_train, y_train)
 evaluar_modelo(modelo, X_test, y_test)
-# Corrección en la llamada de la función
-datos_para_prediccion = cargar_datos_para_prediccion(ruta_benignos)  # Asumiendo que esta función carga los datos correctamente
+
+datos_para_prediccion = cargar_datos_para_prediccion(ruta_benignos) 
 cambios_individuales_benignos = evaluar_cambio_individual_por_muestra_optimizado(datos_para_prediccion, modelo)
 print(cambios_individuales_benignos)
 
-datos_para_prediccion = cargar_datos_para_prediccion(ruta_malignos)  # Asumiendo que esta función carga los datos correctamente
+datos_para_prediccion = cargar_datos_para_prediccion(ruta_malignos) 
 cambios_individuales_malignos = evaluar_cambio_individual_por_muestra_optimizado(datos_para_prediccion, modelo)
 print(cambios_individuales_malignos)
 """""
@@ -508,11 +462,11 @@ plt.tight_layout()
 plt.show()
 
 # Corrección en la llamada de la función
-datos_para_prediccion = cargar_datos_para_prediccion(ruta_benignos)  # Asumiendo que esta función carga los datos correctamente
+datos_para_prediccion = cargar_datos_para_prediccion(ruta_benignos) 
 cambios_por_pares_benignos = contar_cambios_prediccion_por_pares_de_caracteristicas(datos_para_prediccion, modelo)
 print(cambios_por_pares_benignos)
 
-datos_para_prediccion = cargar_datos_para_prediccion(ruta_malignos)  # Asumiendo que esta función carga los datos correctamente
+datos_para_prediccion = cargar_datos_para_prediccion(ruta_malignos)  
 cambios_por_pares_malignos = contar_cambios_prediccion_por_pares_de_caracteristicas(datos_para_prediccion, modelo)
 print(cambios_por_pares_malignos)
 
