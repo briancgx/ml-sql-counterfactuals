@@ -12,6 +12,9 @@ Uso de los códigos:
 4-Porcentajes-y-Graficas:
     Realiza las graficas del porcentaje de cambio totales que hubo al modificar una y dos caracteristicas.
     
-5-RelevanciaDeLaFeaturesEnCambioDeLaPrediccion_y_Graficacion.py
-    Realiza las graficas de las caracteristicas que al ser cambiadas modificaron la predicción, teniendo en cuenta que esto solo se realizo con una caracteristica ya que con dos todaas modificaban su predicción.
+5-RelevanciaDeLaFeaturesEnCambioDeLaPrediccion_y_Graficacion:
+    Realiza las graficas de las caracteristicas que al ser cambiadas modificaron la predicción, teniendo en cuenta que esto solo se realizo con una caracteristica ya     que con dos todaas modificaban su predicción.
+    
+6-ModeloModificadoParaVectoresDeFeatures.py:
+    Modelo modificado que nos permite realizar prediccionas mediante una una lista de 82 features encendidas o apagadas.
 
