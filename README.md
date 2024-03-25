@@ -10,4 +10,5 @@ Uso de los códigos:
     Multiplica los vectores del resultante de Downsampling.py para terminar la reduccion de los datasets
 
 4-Porcentajes-y-Graficas:
-    Realiza las graficas de la iteracion al modificar una y dos features, y las graficas de las Features mas importantes
+    Realiza las graficas del porcentaje de cambio totales que hubo al modificar una y dos caracteristicas.
+5-
