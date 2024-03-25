@@ -11,4 +11,7 @@ Uso de los códigos:
 
 4-Porcentajes-y-Graficas:
     Realiza las graficas del porcentaje de cambio totales que hubo al modificar una y dos caracteristicas.
-5-
+    
+5-RelevanciaDeLaFeaturesEnCambioDeLaPrediccion_y_Graficacion.py
+    Realiza las graficas de las caracteristicas que al ser cambiadas modificaron la predicción, teniendo en cuenta que esto solo se realizo con una caracteristica ya que con dos todaas modificaban su predicción.
+
