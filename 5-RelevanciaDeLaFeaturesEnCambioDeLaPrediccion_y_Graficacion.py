@@ -43,7 +43,6 @@ def evaluar_modelo(modelo, X_test, y_test):
     print("\nMatriz de Confusión:\n", confusion_matrix(y_test, y_pred))
     print("\nReporte de Clasificación:\n", classification_report(y_test, y_pred))
     
-    # Opcional: Mostrar la importancia de las características
     plt.figure(figsize=(10, 6))
     importancias = modelo.feature_importances_
     indices = np.argsort(importancias)[::-1]
@@ -53,7 +52,7 @@ def evaluar_modelo(modelo, X_test, y_test):
     plt.xlim([-1, X_test.shape[1]])
     plt.show()
     
-# Asumiendo que los datos están en 'datos_malignos.csv' y 'datos_benignos.csv'
+
 ruta_malignos = 'MalignosMultiplicados.csv'
 ruta_benignos = 'BenignosMultiplicados.csv'
 
@@ -93,29 +92,17 @@ def cargar_datos_para_prediccion(ruta_archivo):
 
 
 def contar_cambios_prediccion_global(X, modelo):
-    """
-    Analiza el impacto de cambiar cada característica de 0 a 1 o de 1 a 0 en las predicciones del modelo
-    para todo el conjunto de datos X.
-
-    :param X: DataFrame de Pandas con las características de las muestras.
-    :param modelo: Modelo de clasificación entrenado.
-    :return: Vector con el contador de cambios para cada característica.
-    """
     num_caracteristicas = X.shape[1]
     cambios_por_caracteristica = np.zeros(num_caracteristicas)
     
-    # Predicciones originales para todo el conjunto de datos
+  
     predicciones_originales = modelo.predict(X)
     
-    # Iterar sobre cada característica
+   
     for j in range(num_caracteristicas):
-        # Copiar el DataFrame para no modificar el original
         X_modificado = X.copy()
-        # Cambiar la característica j-ésima de todas las muestras
         X_modificado.iloc[:, j] = 1 - X_modificado.iloc[:, j]
-        # Evaluar predicción con la característica modificada para todo el conjunto
         predicciones_modificadas = modelo.predict(X_modificado)
-        # Contar cuántas veces la predicción cambia para esta característica
         cambios = np.sum(predicciones_modificadas != predicciones_originales)
         cambios_por_caracteristica[j] = cambios
     
@@ -134,7 +121,7 @@ def contar_cambios_prediccion_2_caracteristicas_optimizado(X, modelo):
             cambios = np.sum(predicciones_modificadas != modelo.predict(X))
             cambios_resultantes.append([j, k, cambios])
 
-    # Convertir resultados a DataFrame
+
     df_cambios = pd.DataFrame(cambios_resultantes, columns=['Característica 1', 'Característica 2', 'Cambios'])
 
     return df_cambios
@@ -144,32 +131,24 @@ def guardar_cambios_en_csv(cambios_resultantes, nombre_archivo="cambios_predicci
     df_cambios.to_csv(nombre_archivo, index=False)
     
 def graficar_caracteristicas_importantes(cambios_globales):
-    # Ordenar los cambios por importancia y obtener los 10 más altos
     indices_importantes = np.argsort(cambios_globales)[::-1][:10]
     cambios_importantes = cambios_globales[indices_importantes]
-    
-    # Calcular el total de cambios para todos los cambios globales
+
     total_cambios = np.sum(cambios_globales)
     
-    # Calcular el porcentaje de cada cambio importante del total de todos los cambios
     porcentajes_cambios = (cambios_importantes / total_cambios) * 100
     
-    # Crear las etiquetas para las barras
     etiquetas = [f"Característica {i+1}" for i in indices_importantes]
     
-    # Crear la gráfica de barras
     plt.figure(figsize=(10, 6))
     barras = plt.bar(etiquetas, porcentajes_cambios, color='skyblue')
     
-    # Configurar título y etiquetas con tamaño de fuente más pequeño
     plt.title('Top 10 Características que más cambian la predicción (%)', fontsize=10)
     plt.xlabel('Características', fontsize=7)
     plt.ylabel('Porcentaje del cambio total', fontsize=9)
-    
-    # Ajustar las etiquetas del eje X
+  
     plt.xticks(fontsize=8)
     
-    # Colocar un texto sobre cada barra con el porcentaje
     for barra in barras:
         altura = barra.get_height()
         plt.text(barra.get_x() + barra.get_width() / 2., altura + 0.5,
@@ -214,27 +193,17 @@ def contar_cambios_prediccion_detalle(X, modelo):
 def imprimir_cambios_como_enteros(cambios):
     cambios_enteros = [int(cambio) for cambio in cambios]  # Convertir cada elemento a entero
     print(cambios_enteros)
-# Asumiendo que ya tienes X y modelo definidos:
-# X, y = datos.drop('Etiqueta', axis=1), datos['Etiqueta']
-# modelo = entrenar_modelo(X_train, y_train)
-
-# Ahora, para contar los cambios de predicción para todo el dataset:
 datos_para_prediccion = cargar_datos_para_prediccion(ruta_benignos)
 cambios_globales = contar_cambios_prediccion_global(datos_para_prediccion, modelo)
 graficar_caracteristicas_importantes(cambios_globales)
 vector_contador_cambio = []
-# Imprimir los cambios para cada característica
+
 print("Cambios globales por característica:")
 for i, cambio in enumerate(cambios_globales):
     print(f"Característica {i}: Cambios = {cambio}")
     vector_contador_cambio.append(cambio)
     
 print(vector_contador_cambio)
-
-
-#cambios_2_caracteristicas_optimizados = contar_cambios_prediccion_2_caracteristicas_optimizado(datos_para_prediccion, modelo)
-#guardar_cambios_en_csv(cambios_2_caracteristicas_optimizados, "cambios_predicciones_Benignas.csv")
-
 
 datos_para_prediccion = cargar_datos_para_prediccion(ruta_malignos)
 cambios_globales = contar_cambios_prediccion_global(datos_para_prediccion, modelo)
@@ -250,16 +219,12 @@ print(vector_contador_cambio)
 
 datos_malignos = datos[datos['Etiqueta'] == 1].drop('Etiqueta', axis=1)
 
-# Filtrar datos benignos
+
 datos_benignos = datos[datos['Etiqueta'] == 0].drop('Etiqueta', axis=1)
 
-# Contar cambios en predicciones para datos malignos
 cambios_a_activado_malignos, cambios_a_desactivado_malignos = contar_cambios_prediccion_detalle(datos_malignos, modelo)
 
-
-# Contar cambios en predicciones para datos benignos
 cambios_a_activado_benignos, cambios_a_desactivado_benignos = contar_cambios_prediccion_detalle(datos_benignos, modelo)
-# Después de contar los cambios, utiliza la función imprimir_cambios_como_enteros para imprimir los resultados
 print("Cambios globales por característica:")
 imprimir_cambios_como_enteros(cambios_globales)
 
@@ -275,13 +240,11 @@ imprimir_cambios_como_enteros(cambios_a_activado_benignos)
 print("Benignos - Cambios al desactivar una característica:")
 imprimir_cambios_como_enteros(cambios_a_desactivado_benignos)
 
-# Re-defining the function to calculate top 5
-def calcular_top_5(cambios):
-    indices_top_5 = np.argsort(cambios)[::-1][:5]  # Indices of top 5 changes
-    valores_top_5 = np.sort(cambios)[::-1][:5]  # Values of top 5 changes
-    return indices_top_5, valores_top_5
 
-# Calculating top 5 for each category
+def calcular_top_5(cambios):
+    indices_top_5 = np.argsort(cambios)[::-1][:5] 
+    valores_top_5 = np.sort(cambios)[::-1][:5]  
+    return indices_top_5, valores_top_5
 top_5_activado_malignos_indices, top_5_activado_malignos_valores = calcular_top_5(cambios_a_activado_malignos)
 top_5_desactivado_malignos_indices, top_5_desactivado_malignos_valores = calcular_top_5(cambios_a_desactivado_malignos)
 top_5_activado_benignos_indices, top_5_activado_benignos_valores = calcular_top_5(cambios_a_activado_benignos)
@@ -328,7 +291,6 @@ def buscar_sentencia_en_dataset(sentencia, dataset):
     :param dataset: El DataFrame de Pandas del otro dataset donde buscar.
     :return: True si la sentencia existe en el dataset, False en caso contrario.
     """
-    # Intentamos encontrar la sentencia exacta en el dataset. Convertimos ambos DataFrames a listas para la comparación.
     existe = any((dataset.values == sentencia.values).all(1))
     return existe
 
@@ -342,8 +304,7 @@ def evaluar_cambios_entre_datasets(X_malignos, X_benignos, modelo):
             for caracteristica in range(X_origen.shape[1]):
                 sentencia_modificada = sentencia.copy()
                 sentencia_modificada.iloc[caracteristica] = 1 - sentencia_modificada.iloc[caracteristica]
-                
-                # Asegurar que la sentencia modificada sea un DataFrame antes de pasarla al modelo
+            
                 sentencia_modificada_df = pd.DataFrame([sentencia_modificada])
                 
                 prediccion_original = modelo.predict(sentencia.values.reshape(1, -1))[0]
@@ -355,7 +316,6 @@ def evaluar_cambios_entre_datasets(X_malignos, X_benignos, modelo):
 
                         print(f"Sentencia: {sentencia_modificada.values}")
 
-# Suponiendo que `datos` es tu DataFrame completo que ya ha sido cargado anteriormente
 X_malignos = datos[datos['Etiqueta'] == 1].drop('Etiqueta', axis=1)
 X_benignos = datos[datos['Etiqueta'] == 0].drop('Etiqueta', axis=1)
 evaluar_cambios_entre_datasets(X_malignos, X_benignos, modelo)
