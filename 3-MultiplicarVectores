@@ -1,0 +1,29 @@
+import pandas as pd
+
+# Cargar el dataset de entrada
+df = pd.read_csv('DownMalignos.csv', header=None)
+
+# Función para convertir la cadena del vector en una lista de enteros
+def vector_to_list(vector_str):
+    return list(map(int, vector_str.strip("()").split(",")))
+
+# Función para generar las filas según la frecuencia
+def generate_rows(vector_str, frequency):
+    vector = vector_to_list(vector_str)
+    return [vector] * frequency
+
+# Lista para almacenar todas las filas que generaremos
+all_rows = []
+
+# Iterar sobre cada fila del DataFrame
+for index, row in df.iterrows():
+    vector_str, frequency = row[0], row[1]
+    all_rows.extend(generate_rows(vector_str, frequency))
+
+# Convertir la lista de todas las filas en un DataFrame
+new_df = pd.DataFrame(all_rows)
+
+# Guardar el nuevo DataFrame en un archivo CSV
+new_df.to_csv('MalignosMultiplicados.csv', header=False, index=False)
+
+print("El nuevo dataset ha sido generado con éxito.")
