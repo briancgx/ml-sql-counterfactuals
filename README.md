@@ -15,6 +15,8 @@ Uso de los códigos:
 5-RelevanciaDeLaFeaturesEnCambioDeLaPrediccion_y_Graficacion:
     Realiza las graficas de las caracteristicas que al ser cambiadas modificaron la predicción, teniendo en cuenta que esto solo se realizo con una caracteristica ya     que con dos todaas modificaban su predicción.
     
-6-ModeloModificadoParaVectoresDeFeatures.py:
+6-ModeloModificadoParaVectoresDeFeatures:
     Modelo modificado que nos permite realizar prediccionas mediante una una lista de 82 features encendidas o apagadas.
 
+7-ExplainerDashboard.py:
+    Script que nos permitio obtener una visualizacion clara de las metricas y informacion acerca del rendimiento del modelo, mediante un Explainer          Dashboard.
