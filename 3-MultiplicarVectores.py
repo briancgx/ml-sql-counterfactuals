@@ -3,7 +3,14 @@ import pandas as pd
 df = pd.read_csv('DownMalignos.csv', header=None)
 
 def vector_to_list(vector_str):
-    return list(map(int, vector_str.strip("()").split(",")))
+    clean_str = vector_str.strip("()").replace("'", "").replace(" ", "")
+    vector_list = []
+    for item in clean_str.split(","):
+        try:
+            vector_list.append(int(item))
+        except ValueError:
+            print(f"Advertencia: '{item}' no es un entero y será ignorado.")
+    return vector_list
 
 def generate_rows(vector_str, frequency):
     vector = vector_to_list(vector_str)
